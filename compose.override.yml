@@ -1,0 +1,82 @@
+services:
+  faucet:
+    container_name: !reset null
+    ports: !reset []
+    networks:
+      proxy: {}
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-faucet.rule=Host(`faucet.${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-faucet.entrypoints=web,websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-faucet.service=${COMPOSE_PROJECT_NAME}-faucet"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-faucet.loadbalancer.server.port=8080"
+
+  network-explorer:
+    container_name: !reset null
+    ports: !reset []
+    environment:
+      PORT: 4000
+      VUE_APP_WSS_ENDPOINT: ws://${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-explorer.rule=Host(`explorer.${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-explorer.entrypoints=web,websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-explorer.service=${COMPOSE_PROJECT_NAME}-explorer"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-explorer.loadbalancer.server.port=4000"
+
+  vl:
+    container_name: !reset null
+    ports: !reset []
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-vl.rule=Host(`vl.${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-vl.entrypoints=web,websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-vl.service=${COMPOSE_PROJECT_NAME}-vl"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-vl.loadbalancer.server.port=80"
+
+  pnode1:
+    container_name: !reset null
+    ports: !reset []
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      # port_rpc_public → ws
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.rule=Host(`${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.entrypoints=web,websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-ws.service=${COMPOSE_PROJECT_NAME}-ws"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-ws.loadbalancer.server.port=6018"
+      # port_ws_public → rpc
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-rpc.rule=Host(`rpc.${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-rpc.entrypoints=web,websecure"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-rpc.service=${COMPOSE_PROJECT_NAME}-rpc"
+      - "traefik.http.services.${COMPOSE_PROJECT_NAME}-rpc.loadbalancer.server.port=5017"
+      # port_ws_admin_local
+      # - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.rule=Host(`admin.${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}`)"
+      # - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.entrypoints=web,websecure"
+      # - "traefik.http.routers.${COMPOSE_PROJECT_NAME}-admin.service=${COMPOSE_PROJECT_NAME}-admin"
+      # - "traefik.http.services.${COMPOSE_PROJECT_NAME}-admin.loadbalancer.server.port=6016"
+
+  vnode1:
+    container_name: !reset null
+    ports: !reset []
+
+  vnode2:
+    container_name: !reset null
+    ports: !reset []
+
+  vnode3:
+    container_name: !reset null
+    ports: !reset []
+
+networks:
+  proxy:
+    external: true

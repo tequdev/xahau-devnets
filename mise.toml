@@ -1,0 +1,28 @@
+[tools]
+python = "3.10"
+"pipx:git+https://github.com/tequdev/xrpld-network-gen.git" = "devnets"
+
+[tasks.traefik]
+run = "docker compose -f compose.traefik.yml up -d"
+
+[tasks.create]
+usage = '''
+arg "<name>" help="name of the network"
+arg "[version]" help="version of the network"
+flag "--log_level [level]" help="The log level" default="trace" {
+  choices "warning", "debug", "trace
+}
+'''
+run = "xrpld-netgen create:network --protocol xahau --name ${usage_name?} --build_version ${usage_version?} --log_level ${usage_log_level?}"
+
+[tasks.start]
+usage = '''
+arg "<name>" help="name of the network"
+'''
+run = "docker compose -f workspace/${usage_name?}-cluster/docker-compose.yml -f compose.override.yml up -d --build"
+
+[tasks.stop]
+usage = '''
+arg "<name>" help="name of the network"
+'''
+run = "docker compose -f workspace/${usage_name?}-cluster/docker-compose.yml -f compose.override.yml down"
