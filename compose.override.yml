@@ -17,7 +17,7 @@ services:
     ports: !reset []
     environment:
       PORT: 4000
-      VUE_APP_WSS_ENDPOINT: ws://${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}
+      VUE_APP_WSS_ENDPOINT: wss://${COMPOSE_PROJECT_NAME}.${BASE_DOMAIN:-example.com}
     networks:
       - proxy
     labels:
