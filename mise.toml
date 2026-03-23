@@ -27,3 +27,9 @@ usage = '''
 arg "<name>" help="name of the network"
 '''
 run = "docker compose -f workspace/${usage_name?}-cluster/docker-compose.yml -f compose.override.yml down"
+
+[tasks.config]
+usage = '''
+arg "<name>" help="name of the network"
+'''
+run ="docker compose -f workspace/${usage_name?}-cluster/docker-compose.yml -f compose.override.yml config"

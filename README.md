@@ -55,7 +55,7 @@ Set `BASE_DOMAIN` and `ACME_EMAIL` in `mise.local.toml`.
 ### 3. Generate a network
 
 ```sh
-xrpld-netgen create:network --protocol xahau --name <name> --build_version <version>
+mise run create <name> [version] [--log_level level]
 ```
 
 This creates a cluster configuration under `./workspace/<name>-cluster/`.
@@ -75,22 +75,43 @@ mise run traefik
 ### 6. Start a devnet stack
 
 ```sh
-docker compose \
-  -f ./workspace/<name>-cluster/docker-compose.yml \
-  -f ./compose.override.yml \
-  up -d
+mise run start <name>
 ```
 
-Replace `<name>` with a unique project name (e.g. `devnet-a`) and `<version>` with the build version used in step 3.
+Replace `<name>` with a unique project name (e.g. `devnet-a`) and `[version]` with the build version used in step 3.
 
-To run a second instance, repeat step 3 with a different name, version:
+To run a second instance, repeat step 3 with a different name and version, then start it:
 
 ```sh
-docker compose \
-  -f ./workspace/<name-b>-cluster/docker-compose.yml \
-  -f ./compose.override.yml \
-  up -d
+mise run create <name-b> [version]
+mise run start <name-b>
 ```
+
+### 7. Stop a devnet stack
+
+```sh
+mise run stop <name>
+```
+
+### 8. View resolved compose config
+
+```sh
+mise run config <name>
+```
+
+This outputs the fully resolved Docker Compose configuration for the given stack, useful for debugging.
+
+## Mise Tasks
+
+All operations are wrapped as [mise](https://mise.jdx.dev/) tasks. Run `mise tasks` to list them.
+
+| Task      | Description                                      | Usage                                          |
+| --------- | ------------------------------------------------ | ---------------------------------------------- |
+| `traefik` | Start the Traefik reverse proxy                  | `mise run traefik`                             |
+| `create`  | Generate a new network configuration             | `mise run create <name> [version] [--log_level level]` |
+| `start`   | Start a devnet stack                             | `mise run start <name>`                        |
+| `stop`    | Stop a devnet stack                              | `mise run stop <name>`                         |
+| `config`  | Show resolved Docker Compose config for a stack  | `mise run config <name>`                       |
 
 ## Environment Variables
 
