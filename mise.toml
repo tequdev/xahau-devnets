@@ -11,7 +11,7 @@ usage = '''
 arg "<name>" help="name of the network"
 arg "[version]" help="version of the network"
 flag "--log_level [level]" help="The log level" default="trace" {
-  choices "warning", "debug", "trace
+  choices "warning" "debug" "trace"
 }
 '''
 run = "xrpld-netgen create:network --protocol xahau --name ${usage_name?} --build_version ${usage_version?} --log_level ${usage_log_level?}"
