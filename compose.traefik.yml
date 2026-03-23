@@ -7,10 +7,10 @@ services:
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
-      - --entrypoints.websecure.http.tls.certResolver=letsencrypt
-      - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@example.com}
-      - --certificatesresolvers.letsencrypt.acme.storage=/acme/acme.json
-      - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
+      # - --entrypoints.websecure.http.tls.certResolver=letsencrypt
+      # - --certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL:-admin@example.com}
+      # - --certificatesresolvers.letsencrypt.acme.storage=/acme/acme.json
+      # - --certificatesresolvers.letsencrypt.acme.tlschallenge=true
     ports:
       - "80:80"
       - "443:443"
